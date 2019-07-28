@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Display Webcam Stream</title>
+ 
+<style>
+body {
+	background-color: lightyellow;
+}
+#container1 {
+	margin: 0px auto;
+	width: 49%;
+	float: left;
+}
+#container2 {
+	margin: 0px auto;
+	width: 49%;
+	float: right;
+}
+#titlebar {
+	margin: 0px auto;
+	text-align: center;
+	width: 100%;
+	height: 10%;
+}
+#observer {
+	margin: 0px auto;
+	text-align: center;
+	width: 100%;
+	height 10%;
+}
+
+#videoElement1 {
+	position: relative;
+	width: 67%;
+	height: 30%;
+	background-color: aliceblue;
+}
+
+#videoElement2 {
+	position: relative;
+	width: 67%;
+	height: 35%;
+	background-color: aliceblue;
+}
+#photobutton {
+	text-align: center;
+}
+
+</style>
+</head>
+ 
+<body>
+<div id="titlebar"> <!--draws the header block-->
+	<h1>Video test screen, Marc Fairbairn MSc 2019</h1>
+	<h4>This is a demonstration prototype of a basic interface for recording citizen science observations.</h4>
+	<h4>The Take a photo buttons will capture a frame from the live video stream and place it on the screen.</h4>
+	<h4>The Record your observations box allows text input.</h4>
+</div>
+<!--Places the bee camera video live stream on screen -->
+<div id="container1"> 
+	<div>
+		<video autoplay="true" width="360" height="240" id="videoElement1"></video>
+	</div>
+	<h5>Bee hotel camera</h5>
+	<div class="photobutton">
+		<button id="photo1">Take a photo</button>
+		<button id="photoObserver1">Upload your photo</button>
+	</div>
+	<canvas id="canvas1" width="400" height="400"></canvas>
+</div>
+<!--Places the planter video live stream on screen -->
+<div id="container2"> 
+	<div>
+		<video autoplay="true" width="360" height="240" id="videoElement2"></video>
+		
+	</div>
+	<h5>Plant camera</h5>
+	<div class="photobutton">
+		<button id="photo2">Take a photo</button>
+		<button id="photoObserver2">Upload your photo</button>
+	</div>
+	<canvas id="canvas2" width="400" height="400"></canvas>
+</div>
+<div id="observer">  <!--Creates a box for text observations-->
+	<h4>Behavioural observations</h4>
+	<textarea id="observerBox" style="width: 500px; height; 300px;" rows="10" placeholder="Please record your written observations here"></textarea>
+	<div class="observerbutton">
+		<button id="myObserver">Submit</button>
+	</div>
+</div>
+
+<script>
+var video1 = document.querySelector("#videoElement1");
+var video2 = document.querySelector("#videoElement2");
+var canvas1 = document.getElementById('canvas1');
+var canvas2 = document.getElementById('canvas2');
+var context1 = canvas1.getContext('2d');
+var context2 = canvas2.getContext('2d');
+var photo1 = document.getElementById('photo1');
+var photo2 = document.getElementById('photo2');
+var myObserver = document.getElementById('myObserver');
+
+// sets up the live streaming source for the bee hotel
+if (navigator.mediaDevices.getUserMedia && navigator.mediaDevices.getUserMedia) {
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(function (stream) {
+      video1.srcObject = stream;
+    })
+    .catch(function (err0r) {
+      console.log("Something went wrong!");
+    });
+	
+} 
+// generates a screen capture from live stream 1 and draws it below the live stream
+document.getElementById("photo1").addEventListener("click", function() {
+	context1.drawImage(video1, 0, 0, 360, 360);
+});
+// dummy upload of photo
+document.getElementById("photoObserver1").addEventListener("click", function() {
+	alert ("Your observations have been sent to the project team for analysis.");
+});
+// sets up the live streaming source for the planter
+if (navigator.mediaDevices.getUserMedia && navigator.mediaDevices.getUserMedia) {
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(function (stream) {
+      video2.srcObject = stream;
+    })
+    .catch(function (err0r) {
+      console.log("Something went wrong!");
+    });
+}
+// generates a screen capture from live stream 2 and draws it below the live stream
+document.getElementById("photo2").addEventListener("click", function() {
+	context2.drawImage(video2, 0, 0, 360, 360);
+});
+// dummy upload of photo
+document.getElementById("photoObserver2").addEventListener("click", function() {
+	alert ("Your observations have been sent to the project team for analysis.");
+});
+// accepts entries in the text observer box, sets up an acknowledgement on clicking submit, and clears the box
+
+document.getElementById("myObserver").addEventListener("click", function() {
+	alert ("Your observations have been sent to the project team for analysis.");
+	document.getElementById("observerBox").value="";
+});
+</script>
+</body>
+</html>
